@@ -79,6 +79,7 @@ class Network(object):
 myFile = "a7_input.txt"
 myNet = Network(myFile)
 print("Simulation of a: ", myNet.simulate("a"))
+
 # def calcValue(output):
 # 	mfile = "a7_input.txt"
 # 	while True:
