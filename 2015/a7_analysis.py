@@ -78,46 +78,13 @@ class Network(object):
 
 myFile = "a7_input.txt"
 myNet = Network(myFile)
-print("Simulation of a: ", myNet.simulate("a"))
+aOut = myNet.simulate("a")
+print("P1: Simulation of a: ", aOut)
 
-# def calcValue(output):
-# 	mfile = "a7_input.txt"
-# 	while True:
-# 		# Read a line
-# 		line = mfile.readline().rstrip()
-# 		# If cannot read line, something has gone wrong
-# 		if not line:
-# 			print("Error could not find gate producing ", output, file = sys.stderr)
-# 			break
-# 		# Parse line into gate object
-# 		gate = Gate(line)
-# 		# Check if current gate generates the desired output
-# 		if gate.output == output:
-# 			# Check if single input gate, meaning either NOT, identity, or input gate
-# 			if gate.input2 is None:
-# 				try:
-# 					# Gate is input
-# 					return(int(gate.input1))
-# 				except ValueError:
-# 					# Gate is NOT, return NOT'd value
-# 					myInput1 = calcValue(gate.input1))
-# 					return( ~ myInput1)
-# 			else:
-# 				# Calculate inputs
-# 				myInput1 = calcValue(gate.input1)
-# 				myInput2 = calcValue(gate.input2)
-
-# 		else:
-# 			continue
+myNet = Network(myFile)
+myNet.gates['b'].input1 = aOut
+aOut = myNet.simulate("a")
+print("P2: Simulation of a: ", aOut)
 
 
-# calcValue("a")
 
-# mfile = "a7_input.txt"
-# gates = list()
-# while True:
-# 	line = mfile.readline().rstrip()
-# 	ll = line.split()
-# 	if len(ll) == 4:
-
-# 	gates.append(line)

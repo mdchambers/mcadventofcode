@@ -37,3 +37,7 @@ colnames(x.rev) <- colnames(x)
 
 all <- rbind(x, x.rev)
 all %>% spread(to, dist, fill = 0)
+
+sites <- all$from %>% unique
+
+expand.grid(sites, sites)
