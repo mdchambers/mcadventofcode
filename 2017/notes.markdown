@@ -104,5 +104,25 @@ range(n) = ( sum( range(i)) for i in 1 to n-1 ) + 1
 4 3 0 1 2
 3 4 2 1 0
 
+### Day 11
+
+Use point grid with 0.5 increments to represent hex grid
+
+Distances
+
+(1.5, 2.5) 4
+
+### Day 13
+
+0 0 1
+1 1 2
+2 2 3
+3 3 2
+4 2 1
+5 1 0
+6 0 1
+7 1 2
+8 2 3
+
 
 
