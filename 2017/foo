@@ -1,0 +1,14 @@
+defaultdict(<class 'int'>, {}) ['set', 'a', '1'] 1
+defaultdict(<class 'int'>, {'a': 1}) ['add', 'a', '2'] 2
+defaultdict(<class 'int'>, {'a': 3}) ['mul', 'a', 'a'] 3
+defaultdict(<class 'int'>, {'a': 9}) ['mod', 'a', '5'] 5
+defaultdict(<class 'int'>, {'a': 4}) ['snd', 'a'] 0
+defaultdict(<class 'int'>, {'a': 4}) ['set', 'a', '0'] 0
+defaultdict(<class 'int'>, {'a': 0}) ['rcv', 'a'] 0
+In rcv: a 0
+defaultdict(<class 'int'>, {'a': 0}) ['jgz', 'a', '-1'] -1
+defaultdict(<class 'int'>, {'a': 0}) ['set', 'a', '1'] 1
+defaultdict(<class 'int'>, {'a': 1}) ['jgz', 'a', '-2'] -2
+defaultdict(<class 'int'>, {'a': 1}) ['jgz', 'a', '-1'] -1
+defaultdict(<class 'int'>, {'a': 1}) ['rcv', 'a'] 0
+In rcv: a 1

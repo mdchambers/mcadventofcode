@@ -73,8 +73,8 @@ class Disk(object):
 				for d in self.children:
 					print(d.name, " ", d.weight)
 					d.findUnbalanced()
-			else:
-				print("Balanced: ", self.name)
+			# else:
+				# print("Balanced: ", self.name)
 		else:
 			print("End ", self.name)
 

@@ -124,5 +124,40 @@ Distances
 7 1 2
 8 2 3
 
+### Day 16
 
+* Dance
+	* `__init__`
+		* Create from file or with step set
+		* From steps, generates a mapping with `getMapping`
+	* `applyDance(self, group)`
+		* Apply dance to group
+	* `getMapping()`
+		* Gets a mapping
+	* `spin`/`exchange`/`partner`
+		* Performs dance moves
+		* Utilized by `getMapping` to gen mapping
+	* `fromRep(dance, n)`
+		* `@staticmethod`
+		* Generates a new Dance with mapping corresponding to applying `dance` `n` times
+
+* DanceGroup
+	* `__init__`
+		* Creates and initializes
+	* `applyDance(dance)`
+		* Applies dance to the dancegroup
+
+### Day 17
+2nd | Len
+1
+2
+2
+2
+5
+5
+5
+5
+9
+
+* Submitted: 1222153 (too low)
 
