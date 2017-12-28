@@ -147,6 +147,10 @@ Distances
 	* `applyDance(dance)`
 		* Applies dance to the dancegroup
 
+* Logic
+	* Find cycle in permutations
+	* Solution is 
+
 ### Day 17
 2nd | Len
 1
@@ -160,4 +164,169 @@ Distances
 9
 
 * Submitted: 1222153 (too low)
+
+### Day 22
+
+
+
+(-1, -1) (-1, 0) (-1, 1)
+( 0, -1) ( 0, 0) ( 0, 1)
+( 1, -1) ( 1, 0) ( 1, 1)
+
+### Day 23
+
+#### Full
+b = 99
+c = 9
+if a != 0:
+	b = b * 100
+	b = b + 100000
+	c = b
+	c = c + 17000
+do:
+	f = 1
+	d = 2
+	do:
+		e = 2
+		do:
+			g = d
+			g = g * e
+			g = g - b
+			if g != 0:
+				f = 0
+			e = e + 1
+			g = e
+			g = g - b
+		: while g != 0
+		d = d + 1
+		g = d
+		g = g - b
+	: while g != 0
+	if f == 0:
+		h = h + 1
+	g = b
+	g = g - c
+	b = b + 17
+: while g != 0
+
+
+#### Simplified
+a = 1
+<!-- b = 99 -->
+<!-- c = 9 -->
+<!-- b = 9900  b = b * 100 -->
+b = 109900 <!-- b = b + 100000 -->
+<!-- c = 109900 c = b -->
+c = 126900 <!-- c = c + 17000 -->
+do:
+	f = 1
+	d = 2
+	do:
+		e = 2
+		do:
+			<!-- g = 2 g = d -->
+			<!-- g = 2e g = g * e -->
+			g = 2e - 109900 <!-- g = g - b -->
+			if g != 0:
+				f = 0
+			e = e + 1
+			g = e - b <!-- g = e -->
+			<!-- g = g - b -->
+		: while g != 0
+		d = d + 1
+		g = d
+		g = g - b
+	: while g != 0
+	if f == 0:
+		h = h + 1
+	g = b
+	g = g - c
+	b = b + 17
+: while g != 0
+
+
+h = 0
+b = 109900
+c = 126900
+while True:
+	f = 1
+	d = 2
+	while True:
+		e = 2
+		while True:
+			if (2 * e - 109900 ) == 0:
+				f = 0
+			e += 1
+			if (e - b) == 0:
+				break
+		d += 1
+		if (d - b) == 0:
+			break
+	if f == 0:
+		h += 1
+	if (b - c) == 0:
+		break
+	b = b + 17
+	print(h)
+print(h)
+
+
+h = 0
+b = 109900
+c = 126900
+while True:
+	f = 1
+	d = 2
+	while True:
+		e = 2
+		while True:
+			if (d * e - b ) == 0:
+				f = 0
+			e += 1
+			if (e - b) == 0:
+				break
+		d += 1
+		if (d - b) == 0:
+			break
+	if f == 0:
+		h += 1
+	if (b - c) == 0:
+		break
+	b += 17
+	print(h)
+print(h)
+
+
+h = 0
+b = 109900
+c = 126900
+while True:
+	f = 1
+	d = 2	
+	while True:
+		if b % d == 0:
+			f = 0
+		d += 1	
+		if d == b:
+			break
+	if f == 0:
+		h += 1
+	if c == b:
+		break
+	b += 17
+	print(h)
+print(h)
+					
+
+501 -> too low
+1001 -> ?
+
+d * e == b
+
+
+
+
+
+
+
 

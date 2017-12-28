@@ -3,31 +3,15 @@
 # USAGE: day_16_01.py
 # Michael Chambers, 2017
 
-class DanceGroup(object):
-	def __init__(self):
-		self.programs = list("abcdefghijklmnop")
-
-		# For testing
-		# self.programs = list("abcde")
-
-	def __str__(self):
-		return(''.join(self.programs))
-
-	def resetOrder(self):
-		self.programs = list("abcdefghijklmnop")
-
-	def applyDance(self, dance):
-		self.programs
-
+from copy import copy
 
 class Dance(object):
-	def __init__(self, steps = None, file = None, length = 16):
+	def __init__(self, steps = None, file = None):
 		if file:
 			self.steps = Dance.parseSteps(file)
 		else:
 			self.steps = steps
-		self.length = length
-		self.mapping = self.getMapping()
+		self.programs = list("abcdefghijklmnop")
 
 	@staticmethod
 	def parseSteps(file):
@@ -37,17 +21,16 @@ class Dance(object):
 			s = list()
 			s.append(raw[0])
 			coms = raw[1:].split("/")
+			if raw[0] == "s":
+				coms[0] = int(coms[0])
+			elif raw[0] == "x":
+				coms[0] = int(coms[0])
+				coms[1] = int(coms[1])
 			s.append(coms)
 			steps.append(s)
 		return(steps)
 
-	@staticmethod
-	def fromRep(dance, n):
-		newDance = Dance()
-		return(newDance)
-
-	def getMapping(self):
-		mapvec = list(range(self.length))
+	def doDance(self):
 		for s in self.steps:
 			if s[0] == "s":
 				self.spin(s[1][0])
@@ -56,13 +39,35 @@ class Dance(object):
 			elif s[0] == "p":
 				self.partner(s[1][0], s[1][1])
 
+	def reset(self):
+		self.programs = list("abcdefghijklmnop")
+
+	def repDance(self, number):
+		cycle = self.findCycle()
+		toDance = number % cycle
+		self.reset()
+		print("Performing {} cycles".format(toDance))
+		while toDance > 0:
+			self.doDance()
+			toDance -= 1
+
+
+	def findCycle(self):
+		self.reset()
+		cnum = 0
+		initialState = self.programs.copy()
+		while True:
+			cnum += 1
+			self.doDance()
+			if self.programs == initialState:
+				# print("Cycle: {} State: {}".format(cycleNumber, d))
+				return(cnum)
+
 	def spin(self, n):
-		n = int(n)
 		splitIndex = len(self.programs) - n
 		self.programs = self.programs[splitIndex:] + self.programs[:splitIndex]
 
 	def exchange(self, pos1, pos2):
-		pos1, pos2 = (int(pos1), int(pos2))
 		pos1Old = self.programs[pos1]
 		self.programs[pos1] = self.programs[pos2]
 		self.programs[pos2] = pos1Old
@@ -71,28 +76,32 @@ class Dance(object):
 		prog1Index = self.programs.index(prog1)
 		prog2Index = self.programs.index(prog2)
 		self.exchange(prog1Index, prog2Index)
-		
+
+	def __repr__(self):
+		outstr = ''.join(self.programs)
+		return(outstr)
+
 
 def part1(file):
-	group = DanceGroup()
-	dance = Dance(file = file)
-	group.doDance(dance)
-	print("Part 1: {}".format(group))
+	d = Dance(file = file)
+	d.doDance()
+	print(d)
+
 
 def part2(file):
-	group2 = DanceGroup()
-	# for i in range(1000000000):
-	for i in range(1000):
-		group2.doDance(steps)
-		if i % 10000 == 0:
-			print(i)
-	print("Part 2: {}".format(group2))
+	#Find cycle
+	d = Dance(file = file)
+	d.repDance(1000000000)
+	print(d)
+
+
 
 def main():
 	file = "day_16_input.txt"
 	# file = "day_16_test.txt"
+
 	part1(file)
-	# part2(file)
+	part2(file)
 
 
 
