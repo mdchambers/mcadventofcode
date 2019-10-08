@@ -15,4 +15,11 @@ Algorithm:
 
 
 function addWater(position)
-  
+  if area below is clear:
+    addWater( position + [0,1] )
+  if area below is solid or settled water:
+    Add waters to right and left
+    Check each new water for paths down
+    If path down found:
+      Set this row of waters to be unsettled
+      addWater @ path down

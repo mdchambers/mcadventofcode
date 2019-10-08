@@ -3,6 +3,8 @@
 require 'matrix'
 
 class Reservoir
+    @@area_total = 0
+
     def initialize(file)
         @segments = []
         IO.foreach(file) do |line|
@@ -51,7 +53,7 @@ class Reservoir
 # If no clay below, move water down one below. Goto 2 for current water
 
     def simulate
-        initWater = Vector[ 500 - @xs[0], 1]
+        initWater = Vector[ 500 - @xs[0], 0]
         # while true
         addWater(initWater)
         # end
@@ -62,51 +64,76 @@ class Reservoir
     end
 
     def addWater(pos)
-        cwater = Water.new(pos, self)
-        # @wetarea << pos
-        # puts self.to_s( {pos => "X"} )
-        # puts "\n"
+        curr_water = Water.new(pos, self)
+        water_row = [ curr_water ]
 
+        # puts self.to_s({pos => "X"})      
+        puts "#{self.waterArea} #{pos}"
+        if self.waterArea != @@area_total
+            @@area_total = self.waterArea
+            out_counter = 0
+            out_file = "17_temp#{out_counter}.txt"
+            while File.file?(out_file) do
+                out_counter += 1
+                out_file = "17_temp#{out_counter}.txt"
+            end
+            File.open(out_file, 'w') do |f|
+                f.puts self.to_s({pos => "X"})      
+            end
+        end
+
+        return if hasWaterAt?(pos)
         # If at bottom of map, return
-        if cwater.pos[1] + 1 >= @ys[1]
-            return false
+        if outOfBounds?( curr_water.pos + Vector[0,1] )
+            @waters << curr_water
+            return
         end
-
-        # Display updated board
-        puts self.to_s({ pos => "x"}, true)
         
-        # If no support, add water below current water
-        if clear?(cwater.pos + Vector[0,1])
-            addWater( cwater.pos + Vector[0,1])
-            
+        # If empty space below, addWater at that position
+        if clear?(curr_water.pos + Vector[0,1])
+            addWater( curr_water.pos + Vector[0,1] )
         end
 
-        # If water or clay support beneath, spread left and right
-        if !clear?(cwater.pos + Vector[0,1])
-            @waters << cwater
+        # If solid support beneath, add water to each side
+        if !clear?( curr_water.pos + Vector[0,1])
 
-            lset = true
-            rset = true
-
-            # Right
-            if clear?(cwater.pos + Vector[1,0])
-                rset = addWater( cwater.pos + Vector[1,0] )
-            end
-            
-            # Left
-            if clear?( cwater.pos + Vector[-1, 0] )
-                lset = addWater( cwater.pos + Vector[-1, 0] )
+            # Add left
+            cp = curr_water.pos - Vector[1, 0]
+            while clear?(cp) do
+                water_row << Water.new(cp, self)
+                if clear?(cp + Vector[0,1] )
+                    addWater(cp + Vector[0,1] ) 
+                    break
+                end
+                # puts self.to_s({cp => "X"})
+                cp -= Vector[1, 0]
             end
 
-            cwater.settled = lset && rset
+            # Add right
+            cp = curr_water.pos + Vector[1, 0]
+            while clear?(cp) do
+                water_row << Water.new(cp, self)
+                if clear?(cp + Vector[0,1] )
+                    addWater(cp + Vector[0,1] ) 
+                    break
+                end
+                # puts self.to_s({cp => "X"})
+                cp += Vector[1, 0]
+            end
 
-            # If left not settled and right settled, unsettle right
-            if ! lset && rset
+            # Decide if all water is settled
+            row_settled = water_row.map { |w| clear?( w.pos + Vector[0,1] ) }.none?
+            water_row.each { |w| w.settled = row_settled }
 
-
-
+            # Flow water downwards if possible
+            # water_row.each do |w|
+            #     addWater(w.pos + Vector[0,1] ) if clear?(w.pos + Vector[0,1] )
+            # end
         end
-        return cwater.settled
+        
+        # puts self.to_s({pos => "X"})      
+        @waters.concat water_row
+        
     end
 
     def spawn(pos)
@@ -131,6 +158,10 @@ class Reservoir
         display
     end
 
+    def outOfBounds?(pos)
+        pos[0] >= @grid.length || pos[1] >= @grid[ pos[0] ].length
+    end
+
     def clear?(pos)
         if pos[0] >= @grid.length || pos[1] >= @grid[ pos[0] ].length
             return false
@@ -140,24 +171,20 @@ class Reservoir
     end
 
     def hasWaterAt?(pos)
-        waterpos = @waters.map { |w| w.pos }
-        waterpos.include? pos
+        @waters.map{ |w| w.pos == pos && w.settled }.any?
     end
 
-    def to_s(addons = nil, wetarea = false)
+    def to_s(addons = nil)
         output = ""
         tg = @grid.transpose
 
-        # Add wetarea if indicated
-        if wetarea
-            @wetarea.each do |w|
-                tg[ w[1] ][ w[0] ] = "|"
-            end
-        end
-
         # Add water
         @waters.each do |w|
-            tg[ w.pos[1] ][ w.pos[0] ] = "~"
+            if w.settled
+                tg[ w.pos[1] ][ w.pos[0] ] = "~"
+            else
+                tg[ w.pos[1] ][ w.pos[0] ] = "|"
+            end
         end
 
         # Add addiitonal stuff if available
@@ -173,6 +200,12 @@ class Reservoir
 
         output
     end
+
+    def waterArea
+        wp = @waters.map { |w| w.pos }
+        wp.uniq.length
+    end
+
 end
 
 class Water
@@ -223,11 +256,16 @@ class Segment
     end
 end
 
-class Water; end
-
 def part1(input)
     res = Reservoir.new(input)
     res.simulate
+
+    puts "Final:"
+    puts res.to_s
+    puts "Total: #{res.waterArea}"
 end
 
 part1(ARGV.first)
+
+# 13452 => too low
+# 25499 => too low
