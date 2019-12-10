@@ -1,3 +1,6 @@
 .RData
 .Rhistory
 __pycache__
+.DS_Store
+.idea
+build
